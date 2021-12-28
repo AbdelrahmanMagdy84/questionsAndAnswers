@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import './question.dart';
 import './answer.dart';
+import './static_data.dart';
+
 //to see how the pull request works
 void main() {
   runApp(FirstWidget());
@@ -12,25 +14,10 @@ class FirstWidget extends StatefulWidget {
 }
 
 class _FirstWidgetState extends State<FirstWidget> {
-  final List _questions = [
-    {
-      'question': 'first question',
-      'answers': ['q1 answer 1', 'q1 answer 2', 'q1 answer 3']
-    },
-    {
-      'question': 'second question',
-      'answers': ['q2 answer 1', 'q2 answer 2', 'q2 answer 3']
-    },
-    {
-      'question': 'third question',
-      'answers': ['q3 answer 1', 'q3 answer 2', 'q3 answer 3']
-    }
-  ];
-
   int _qindex = 0;
 
   void nextQuestion() {
-    if (_qindex + 1 < _questions.length) {
+    if (_qindex + 1 < questions.length) {
       setState(() {
         _qindex++;
       });
@@ -60,11 +47,11 @@ class _FirstWidgetState extends State<FirstWidget> {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                Question(_questions[_qindex]['question'], _qindex + 1),
+                Question(questions[_qindex]['question'], _qindex + 1),
                 SizedBox(
                   height: 20,
                 ),
-                ..._questions[_qindex]['answers'].map((answer) {
+                ...questions[_qindex]['answers'].map((answer) {
                   return Answer(nextQuestion, answer);
                 })
               ],
