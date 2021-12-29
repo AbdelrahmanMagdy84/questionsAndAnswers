@@ -1,3 +1,4 @@
+import './result.dart';
 import './quiz.dart';
 import 'package:flutter/material.dart';
 import './static_data.dart';
@@ -14,15 +15,22 @@ class FirstWidget extends StatefulWidget {
 
 class _FirstWidgetState extends State<FirstWidget> {
   int _qindex = 0;
-  int score = 0;
+  int _score = 0;
 
   void nextQuestion(String choosed) {
     if (_qindex + 1 <= questions.length) {
       setState(() {
-        if ((questions[_qindex]['answer'] as String) == choosed) score += 1;
+        if ((questions[_qindex]['answer'] as String) == choosed) _score += 1;
         _qindex++;
       });
     }
+  }
+
+  void resetQuiz() {
+    setState(() {
+      _qindex = 0;
+      _score = 0;
+    });
   }
 
   @override
@@ -44,16 +52,7 @@ class _FirstWidgetState extends State<FirstWidget> {
             padding: const EdgeInsets.all(20),
             child: _qindex < questions.length
                 ? Quiz(qindex: _qindex, getNextQuestion: nextQuestion)
-                : Center(
-                    child: Text(
-                      "your score is $score out of 3",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+                : Result(_score, resetQuiz),
           ),
         ),
       ),
