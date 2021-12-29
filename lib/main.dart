@@ -1,6 +1,8 @@
+import './result.dart';
+import './quiz.dart';
 import 'package:flutter/material.dart';
-import './question.dart';
-import './answer.dart';
+import './static_data.dart';
+
 //to see how the pull request works
 void main() {
   runApp(FirstWidget());
@@ -12,33 +14,23 @@ class FirstWidget extends StatefulWidget {
 }
 
 class _FirstWidgetState extends State<FirstWidget> {
-  final List _questions = [
-    {
-      'question': 'first question',
-      'answers': ['q1 answer 1', 'q1 answer 2', 'q1 answer 3']
-    },
-    {
-      'question': 'second question',
-      'answers': ['q2 answer 1', 'q2 answer 2', 'q2 answer 3']
-    },
-    {
-      'question': 'third question',
-      'answers': ['q3 answer 1', 'q3 answer 2', 'q3 answer 3']
-    }
-  ];
-
   int _qindex = 0;
+  int _score = 0;
 
-  void nextQuestion() {
-    if (_qindex + 1 < _questions.length) {
+  void nextQuestion(String choosed) {
+    if (_qindex + 1 <= questions.length) {
       setState(() {
+        if ((questions[_qindex]['answer'] as String) == choosed) _score += 1;
         _qindex++;
       });
-    } else {
-      setState(() {
-        _qindex = 0;
-      });
     }
+  }
+
+  void resetQuiz() {
+    setState(() {
+      _qindex = 0;
+      _score = 0;
+    });
   }
 
   @override
@@ -53,22 +45,14 @@ class _FirstWidgetState extends State<FirstWidget> {
           backgroundColor: Colors.deepOrange[100],
           appBar: AppBar(
             backgroundColor: Colors.brown[100],
-            title: const Text('mynew flutter app'),
+            title: const Text('my new flutter app'),
           ),
           body: Container(
             width: double.infinity,
             padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Question(_questions[_qindex]['question'], _qindex + 1),
-                SizedBox(
-                  height: 20,
-                ),
-                ..._questions[_qindex]['answers'].map((answer) {
-                  return Answer(nextQuestion, answer);
-                })
-              ],
-            ),
+            child: _qindex < questions.length
+                ? Quiz(qindex: _qindex, getNextQuestion: nextQuestion)
+                : Result(_score, resetQuiz),
           ),
         ),
       ),
