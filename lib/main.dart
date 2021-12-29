@@ -1,6 +1,5 @@
+import './quiz.dart';
 import 'package:flutter/material.dart';
-import './question.dart';
-import './answer.dart';
 import './static_data.dart';
 
 //to see how the pull request works
@@ -15,15 +14,13 @@ class FirstWidget extends StatefulWidget {
 
 class _FirstWidgetState extends State<FirstWidget> {
   int _qindex = 0;
+  int score = 0;
 
-  void nextQuestion() {
-    if (_qindex + 1 < questions.length) {
+  void nextQuestion(String choosed) {
+    if (_qindex + 1 <= questions.length) {
       setState(() {
+        if ((questions[_qindex]['answer'] as String) == choosed) score += 1;
         _qindex++;
-      });
-    } else {
-      setState(() {
-        _qindex = 0;
       });
     }
   }
@@ -40,22 +37,23 @@ class _FirstWidgetState extends State<FirstWidget> {
           backgroundColor: Colors.deepOrange[100],
           appBar: AppBar(
             backgroundColor: Colors.brown[100],
-            title: const Text('mynew flutter app'),
+            title: const Text('my new flutter app'),
           ),
           body: Container(
             width: double.infinity,
             padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Question(questions[_qindex]['question'], _qindex + 1),
-                SizedBox(
-                  height: 20,
-                ),
-                ...questions[_qindex]['answers'].map((answer) {
-                  return Answer(nextQuestion, answer);
-                })
-              ],
-            ),
+            child: _qindex < questions.length
+                ? Quiz(qindex: _qindex, getNextQuestion: nextQuestion)
+                : Center(
+                    child: Text(
+                      "your score is $score out of 3",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
           ),
         ),
       ),
